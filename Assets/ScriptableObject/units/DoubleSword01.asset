@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e7e9ffbf3edd084f994f4ffd3b7ea4b, type: 3}
+  m_Name: DoubleSword01
+  m_EditorClassIdentifier: 
+  id: DoubleSword01
+  category: 0
+  type: 0
+  ClassUnit: 4
+  icon: {fileID: 2800000, guid: 3b6fdf48200dfd740ba5d3811916e7a8, type: 3}
+  health: 35
+  physicalAttack: 5
+  magicAttack: 0
+  moveSpeed: 3
+  attackSpeed: 3
+  attackDist: 3

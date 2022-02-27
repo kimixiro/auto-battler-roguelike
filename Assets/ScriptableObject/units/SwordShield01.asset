@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e7e9ffbf3edd084f994f4ffd3b7ea4b, type: 3}
+  m_Name: SwordShield01
+  m_EditorClassIdentifier: 
+  id: SwordShield01
+  category: 0
+  type: 0
+  ClassUnit: 3
+  icon: {fileID: 2800000, guid: b4dd7f9ba2eea694aa77710c5d1d6e76, type: 3}
+  health: 40
+  defence: 0
+  physicalAttack: 3
+  magicAttack: 0
+  magicResistance: 0
+  physicalResistance: 0
+  moveSpeed: 2
+  attackSpeed: 1
+  dodge: 0
+  accuracy: 1
+  attackDist: 3
