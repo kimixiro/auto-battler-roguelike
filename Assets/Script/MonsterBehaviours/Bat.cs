@@ -122,13 +122,13 @@ public class Bat : IUnit
     void Attack()
     {
         animator.SetTrigger("Attack");
-        Debug.Log("attack");
+   
     }
     
     void Dead()
     {
         animator.SetTrigger("Die");
-        Debug.Log("dead");
+       
         _gameBehaviour.DestroyMonster(this);
     }
 

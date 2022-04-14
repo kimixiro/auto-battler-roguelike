@@ -8,7 +8,9 @@ using Random = UnityEngine.Random;
 
 public class Skeleton : IUnit
 {
-      private void Awake ()
+    private const string Extractintel = "Idle";
+
+    private void Awake ()
     {
         eventReceiver.MakeMeleeDamage += HandleMakeMeleeDamage;
     }
@@ -23,9 +25,11 @@ public class Skeleton : IUnit
             fsm = new StateMachine();
             
             StateMachine extractIntel = new StateMachine(needsExitTime: false);
-            fsm.AddState("ExtractIntel", extractIntel);
+            fsm.AddState(Extractintel,
+                onLogic: (state) => Idle()
+            );
             
-            extractIntel.SetStartState("ExtractIntel");
+            extractIntel.SetStartState(Extractintel);
 
             fsm.AddState("FollowUnit",
                 onLogic: (state) =>
@@ -37,10 +41,6 @@ public class Skeleton : IUnit
             fsm.AddState("AttackUnit",
                 onLogic: (state) =>
                 {
-                    if (targeConfig.Health <= 0)
-                    {
-                        fsm.RequestStateChange("SearchNewTargetUnit");
-                    }
                     Attack();
                 }
                 );
@@ -56,7 +56,7 @@ public class Skeleton : IUnit
             fsm.SetStartState("FollowUnit");
 
             fsm.AddTransition(
-                "ExtractIntel",
+                Extractintel,
                 "FollowUnit",
                 (transition) => DistanceToPlayer() > 3);
             
@@ -76,7 +76,7 @@ public class Skeleton : IUnit
                 (transition) => DistanceToPlayer() < 3);
 
             fsm.AddTransition(
-                "ExtractIntel",
+                Extractintel,
                 "AttackUnit",
                 (transition) => DistanceToPlayer() < 3);
 
@@ -97,7 +97,12 @@ public class Skeleton : IUnit
             fsm.Init();
         }
 
-        void Update()
+   private void Idle()
+   {
+       
+   }
+
+   void Update()
         {
             fsm.OnLogic();
         }
@@ -122,13 +127,13 @@ public class Skeleton : IUnit
     void Attack()
     {
         animator.SetTrigger("Attack");
-        Debug.Log("attack");
+     
     }
     
     void Dead()
     {
         animator.SetTrigger("Die");
-        Debug.Log("dead");
+        
         _gameBehaviour.DestroyMonster(this);
     }
 

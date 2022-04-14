@@ -8,6 +8,8 @@ using Random = UnityEngine.Random;
 
 public class Wario : IUnit
 {
+    private const string Extractintel = "Idle";
+
     private void Awake()
     {
         eventReceiver.MakeMeleeDamage += HandleMakeMeleeDamage;
@@ -23,9 +25,11 @@ public class Wario : IUnit
         fsm = new StateMachine();
 
         StateMachine extractIntel = new StateMachine(needsExitTime: false);
-        fsm.AddState("ExtractIntel", extractIntel);
+        fsm.AddState(Extractintel,
+            onLogic: (state) => Idle()
+        );
 
-        extractIntel.SetStartState("ExtractIntel");
+        extractIntel.SetStartState(Extractintel);
 
         fsm.AddState("FollowUnit",
             onLogic: (state) => { MoveTowardsUnit(MoveSpeed); }
@@ -34,7 +38,6 @@ public class Wario : IUnit
         fsm.AddState("AttackUnit",
             onLogic: (state) =>
             {
-            
                 Attack();
             }
         );
@@ -42,9 +45,7 @@ public class Wario : IUnit
         fsm.AddState("SearchNewTargetUnit",
             onLogic: (state) =>
             {
-             
                 SearchNewTarget();
-                
             }
         );
         
@@ -59,7 +60,7 @@ public class Wario : IUnit
         fsm.SetStartState("FollowUnit");
 
         fsm.AddTransition(
-            "ExtractIntel",
+            Extractintel,
             "FollowUnit",
             (transition) => DistanceToPlayer() > AttackDist);
 
@@ -75,7 +76,7 @@ public class Wario : IUnit
         
         fsm.AddTransition(
             "SearchNewTargetUnit",
-            "ExtractIntel",
+            Extractintel,
             (transition) =>target!=null);
         
         fsm.AddTransition(
@@ -84,13 +85,13 @@ public class Wario : IUnit
             (transition) => DistanceToPlayer() < AttackDist);
 
         fsm.AddTransition(
-            "ExtractIntel",
+            Extractintel,
             "AttackUnit",
             (transition) => DistanceToPlayer() < AttackDist);
         
         fsm.AddTransition(
             "WinUnit",
-            "ExtractIntel",
+            Extractintel,
             (transition) =>!_gameBehaviour.win);
 
         fsm.AddTransitionFromAny(new Transition(
@@ -114,6 +115,11 @@ public class Wario : IUnit
 
 
         fsm.Init();
+    }
+
+    private void Idle()
+    {
+        
     }
 
     void Update()

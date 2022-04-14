@@ -23,9 +23,12 @@ public class Tank : IUnit
         fsm = new StateMachine();
 
         StateMachine extractIntel = new StateMachine(needsExitTime: false);
-        fsm.AddState("ExtractIntel", extractIntel);
+        
+        fsm.AddState("Idle",
+            onLogic: (state) => Idle()
+        );
 
-        extractIntel.SetStartState("ExtractIntel");
+        extractIntel.SetStartState("Idle");
 
         fsm.AddState("FollowUnit",
             onLogic: (state) => { MoveTowardsUnit(MoveSpeed); }
@@ -34,14 +37,6 @@ public class Tank : IUnit
         fsm.AddState("AttackUnit",
             onLogic: (state) =>
             {
-                if (target==null)
-                {
-                    fsm.RequestStateChange("SearchNewTargetUnit");
-                }
-                if (targeConfig.Health <= 0)
-                {
-                    fsm.RequestStateChange("SearchNewTargetUnit");
-                }
                 Attack();
             }
         );
@@ -49,12 +44,7 @@ public class Tank : IUnit
         fsm.AddState("SearchNewTargetUnit",
             onLogic: (state) =>
             {
-                if (target!=null)
-                {
-                    fsm.RequestStateChange("ExtractIntel");
-                }
                 SearchNewTarget();
-                
             }
         );
         
@@ -69,7 +59,7 @@ public class Tank : IUnit
         fsm.SetStartState("FollowUnit");
 
         fsm.AddTransition(
-            "ExtractIntel",
+            "Idle",
             "FollowUnit",
             (transition) => DistanceToPlayer() > AttackDist);
 
@@ -85,7 +75,7 @@ public class Tank : IUnit
         
         fsm.AddTransition(
             "SearchNewTargetUnit",
-            "ExtractIntel",
+            "Idle",
             (transition) =>target!=null);
         
         fsm.AddTransition(
@@ -94,13 +84,13 @@ public class Tank : IUnit
             (transition) => DistanceToPlayer() < AttackDist);
 
         fsm.AddTransition(
-            "ExtractIntel",
+            "Idle",
             "AttackUnit",
             (transition) => DistanceToPlayer() < AttackDist);
         
         fsm.AddTransition(
             "WinUnit",
-            "ExtractIntel",
+            "Idle",
             (transition) =>!_gameBehaviour.win);
 
         fsm.AddTransitionFromAny(new Transition(
@@ -119,16 +109,19 @@ public class Tank : IUnit
             "OnDamage",
             new Transition("", "DeadUnit", t => (Health <= 0))
         );
-        
-        
-
 
         fsm.Init();
+    }
+
+    private void Idle()
+    {
+        Debug.Log("Idle");
     }
 
     void Update()
     {
         Debug.Log(_gameBehaviour.win);
+      
         fsm.OnLogic();
     }
 
@@ -159,13 +152,13 @@ public class Tank : IUnit
         Vector3 player = target.position;
         transform.LookAt(player);
         animator.SetTrigger("Attack");
-        Debug.Log("attack");
+      
     }
 
     void Dead()
     {
         animator.SetTrigger("Die");
-        Debug.Log("dead");
+        
         _gameBehaviour.DestroyUnit(this);
     }
 

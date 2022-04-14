@@ -8,7 +8,9 @@ using Random = UnityEngine.Random;
 
 public class Wiizzard : IUnit
 {
-   private void Awake()
+    private const string Extractintel = "Idle";
+
+    private void Awake()
     {
         eventReceiver.MakeMeleeDamage += HandleMakeMeleeDamage;
     }
@@ -23,9 +25,11 @@ public class Wiizzard : IUnit
         fsm = new StateMachine();
 
         StateMachine extractIntel = new StateMachine(needsExitTime: false);
-        fsm.AddState("ExtractIntel", extractIntel);
+        fsm.AddState(Extractintel,
+            onLogic: (state) => Idle()
+        );
 
-        extractIntel.SetStartState("ExtractIntel");
+        extractIntel.SetStartState(Extractintel);
 
         fsm.AddState("FollowUnit",
             onLogic: (state) => { MoveTowardsUnit(MoveSpeed); }
@@ -34,14 +38,6 @@ public class Wiizzard : IUnit
         fsm.AddState("AttackUnit",
             onLogic: (state) =>
             {
-                if (target==null)
-                {
-                    fsm.RequestStateChange("SearchNewTargetUnit");
-                }
-                if (targeConfig.Health <= 0)
-                {
-                    fsm.RequestStateChange("SearchNewTargetUnit");
-                }
                 Attack();
             }
         );
@@ -49,12 +45,7 @@ public class Wiizzard : IUnit
         fsm.AddState("SearchNewTargetUnit",
             onLogic: (state) =>
             {
-                if (target!=null)
-                {
-                    fsm.RequestStateChange("ExtractIntel");
-                }
                 SearchNewTarget();
-                
             }
         );
         
@@ -69,7 +60,7 @@ public class Wiizzard : IUnit
         fsm.SetStartState("FollowUnit");
 
         fsm.AddTransition(
-            "ExtractIntel",
+            Extractintel,
             "FollowUnit",
             (transition) => DistanceToPlayer() > AttackDist);
 
@@ -85,7 +76,7 @@ public class Wiizzard : IUnit
         
         fsm.AddTransition(
             "SearchNewTargetUnit",
-            "ExtractIntel",
+            Extractintel,
             (transition) =>target!=null);
         
         fsm.AddTransition(
@@ -94,13 +85,13 @@ public class Wiizzard : IUnit
             (transition) => DistanceToPlayer() < AttackDist);
 
         fsm.AddTransition(
-            "ExtractIntel",
+            Extractintel,
             "AttackUnit",
             (transition) => DistanceToPlayer() < AttackDist);
         
         fsm.AddTransition(
             "WinUnit",
-            "ExtractIntel",
+            Extractintel,
             (transition) =>!_gameBehaviour.win);
 
         fsm.AddTransitionFromAny(new Transition(
@@ -124,6 +115,11 @@ public class Wiizzard : IUnit
 
 
         fsm.Init();
+    }
+
+    private void Idle()
+    {
+      
     }
 
     void Update()

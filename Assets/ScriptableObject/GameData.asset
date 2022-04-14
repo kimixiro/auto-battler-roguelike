@@ -16,6 +16,7 @@ MonoBehaviour:
   maxSlotMonster: 20
   startPool:
   - DoubleSword01
+  - DoubleSword01
   - Bow01
   - SwordShield01
   - Wizard01

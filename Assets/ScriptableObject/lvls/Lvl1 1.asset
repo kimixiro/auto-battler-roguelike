@@ -16,5 +16,5 @@ MonoBehaviour:
   enemyPrefab:
   - Slime
   - Slime
-  - Bat
-  - Bat
+  - Slime
+  - Slime

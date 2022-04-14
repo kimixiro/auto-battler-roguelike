@@ -8,6 +8,8 @@ using Random = UnityEngine.Random;
 
 public class Slime : IUnit
 {
+    private const string Extractintel = "Idle";
+    
     private void Awake ()
     {
         eventReceiver.MakeMeleeDamage += HandleMakeMeleeDamage;
@@ -23,9 +25,12 @@ public class Slime : IUnit
             fsm = new StateMachine();
             
             StateMachine extractIntel = new StateMachine(needsExitTime: false);
-            fsm.AddState("ExtractIntel", extractIntel);
             
-            extractIntel.SetStartState("ExtractIntel");
+            fsm.AddState(Extractintel,
+                onLogic: (state) => Idle()
+            );
+            
+            extractIntel.SetStartState(Extractintel);
 
             fsm.AddState("FollowUnit",
                 onLogic: (state) =>
@@ -37,10 +42,6 @@ public class Slime : IUnit
             fsm.AddState("AttackUnit",
                 onLogic: (state) =>
                 {
-                    if (targeConfig.Health <= 0)
-                    {
-                        fsm.RequestStateChange("SearchNewTargetUnit");
-                    }
                     Attack();
                 }
                 );
@@ -56,7 +57,7 @@ public class Slime : IUnit
             fsm.SetStartState("FollowUnit");
 
             fsm.AddTransition(
-                "ExtractIntel",
+                Extractintel,
                 "FollowUnit",
                 (transition) => DistanceToPlayer() > 3);
             
@@ -76,7 +77,7 @@ public class Slime : IUnit
                 (transition) => DistanceToPlayer() < 3);
 
             fsm.AddTransition(
-                "ExtractIntel",
+                Extractintel,
                 "AttackUnit",
                 (transition) => DistanceToPlayer() < 3);
 
@@ -97,7 +98,12 @@ public class Slime : IUnit
             fsm.Init();
         }
 
-        void Update()
+   private void Idle()
+   {
+     
+   }
+
+   void Update()
         {
             fsm.OnLogic();
         }
@@ -122,13 +128,13 @@ public class Slime : IUnit
     void Attack()
     {
         animator.SetTrigger("Attack");
-        Debug.Log("attack");
+    
     }
     
     void Dead()
     {
         animator.SetTrigger("Die");
-        Debug.Log("dead");
+     
         _gameBehaviour.DestroyMonster(this);
     }
 
