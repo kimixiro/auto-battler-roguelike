@@ -34,14 +34,7 @@ public class Wario : IUnit
         fsm.AddState("AttackUnit",
             onLogic: (state) =>
             {
-                if (target==null)
-                {
-                    fsm.RequestStateChange("SearchNewTargetUnit");
-                }
-                if (targeConfig.Health <= 0)
-                {
-                    fsm.RequestStateChange("SearchNewTargetUnit");
-                }
+            
                 Attack();
             }
         );
@@ -49,10 +42,7 @@ public class Wario : IUnit
         fsm.AddState("SearchNewTargetUnit",
             onLogic: (state) =>
             {
-                if (target!=null)
-                {
-                    fsm.RequestStateChange("ExtractIntel");
-                }
+             
                 SearchNewTarget();
                 
             }
