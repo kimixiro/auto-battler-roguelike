@@ -117,7 +117,7 @@ public class Archer : IUnit
         
         fsm.AddTriggerTransitionFromAny(
             "OnDamage",
-            new Transition("", "Dead", t => (Health <= 0))
+            new Transition("", "DeadUnit", t => (Health <= 0))
         );
         
         

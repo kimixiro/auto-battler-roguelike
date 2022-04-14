@@ -117,7 +117,7 @@ public class Wiizzard : IUnit
         
         fsm.AddTriggerTransitionFromAny(
             "OnDamage",
-            new Transition("", "Dead", t => (Health <= 0))
+            new Transition("", "DeadUnit", t => (Health <= 0))
         );
         
         
@@ -128,7 +128,7 @@ public class Wiizzard : IUnit
 
     void Update()
     {
-        Debug.Log(_gameBehaviour.win);
+       
         fsm.OnLogic();
     }
 
